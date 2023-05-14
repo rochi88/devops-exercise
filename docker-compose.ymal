@@ -9,6 +9,8 @@ services:
     stdin_open: true
     ports: 
       - "3000:3000"
+    depends_on:
+      - api-server
     networks:
       - mern-app
   api-server:
