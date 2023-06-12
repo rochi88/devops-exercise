@@ -2,36 +2,36 @@ import { useState } from "react";
 import axios from "axios";
 
 export default function Home() {
-  const [value, updateValue] = useState("create new data");
+  const [value, updateValue] = useState("create new todo");
   const [input, setInput] = useState("");
   const baseUrl = "http://localhost:5001";
-  const getDataUrl = `${baseUrl}/data`;
-  const createDataUrl = `${baseUrl}/create`;
+  const getTodoUrl = `${baseUrl}/todo`;
+  const createTodoUrl = `${baseUrl}/create`;
 
-  const getData = async () => {
+  const getTodo = async () => {
     try {
-      const { data } = await axios.get(getDataUrl);
+      const { data } = await axios.get(getTodoUrl);
       updateValue(data);
-      console.log({ message: "got data", data });
+      console.log({ message: "got todo", data });
       return res;
     } catch (error) {
-      console.error({ message: "failed fetching data.", error });
+      console.error({ message: "failed fetching todo.", error });
     }
   };
 
-  const createData = async (inputText) => {
+  const createTodo = async (inputText) => {
     try {
-      const { data } = await axios.post(createDataUrl, { data: inputText });
-      console.log({ message: "posted data", data });
+      const { data } = await axios.post(createTodoUrl, { data: inputText });
+      console.log({ message: "posted todo", data });
       return data;
     } catch (error) {
-      console.error({ message: "failed creating data.", error });
+      console.error({ message: "failed creating todo.", error });
     }
   };
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    await createData(input);
+    await createTodo(input);
     setInput("");
   };
 
@@ -44,18 +44,13 @@ export default function Home() {
             value={input}
             onChange={(evt) => setInput(evt.target.value)}
           />
-          <input type="submit" value="create data" />
+          <input type="submit" value="create todo" />
         </form>
-        <button onClick={getData} style={{ margin: "1rem 0" }}>
-          get data
+        <button onClick={getTodo} style={{ margin: "1rem 0" }}>
+          get todo
         </button>
-        <p style={{ textAlign: "justify" }}>
-          Try creating a data using input. Then click on "get data" twice to see
-          the magic. Keep an eye on the isCached property when you input new
-          data.
-        </p>
       </section>
-      <section style={{ height: "50vh" }}>
+      <section style={{ height: "80vh" }}>
         <h3 style={{ textAlign: "center" }}>output</h3>
         <pre>{JSON.stringify(value, null, 2)}</pre>
       </section>

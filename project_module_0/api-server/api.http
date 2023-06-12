@@ -2,7 +2,7 @@
 GET http://localhost:5001/
 
 ### test connection
-GET http://localhost:5001/data
+GET http://localhost:5001/todo
 
 
 ### create a new user

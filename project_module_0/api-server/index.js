@@ -12,16 +12,16 @@ const expressPort = process.env.PORT || 5001;
 // redis
 const redisUsername = process.env.REDIS_USERNAME || "";
 const redisPassword = process.env.REDIS_PASSWORD || "mypassword";
-const redisHost = process.env.REDIS_HOST || "redis-pubsub";
+const redisHost = process.env.REDIS_HOST || "redis";
 const redisPort = process.env.REDIS_PORT || 6379;
 const redisChannel = process.env.REDIS_CHANNEL || "channel1";
 
 // mysql
-const sqlHost = process.env.MYSQL_HOST || "127.0.0.1";
+const sqlHost = process.env.MYSQL_HOST || "db";
 const sqlUser = process.env.MYSQL_USERNAME || "root";
 const sqlPassword = process.env.MYSQL_PASSWORD || "password";
 const sqlDatabase = process.env.MYSQL_DATABASE || "mydb";
-const sqlTable = process.env.MYSQL_TABLE || "mytable";
+const sqlTable = process.env.MYSQL_TABLE || "todos";
 
 // configs
 const redisUrl = `redis://${redisUsername}:${redisPassword}@${redisHost}:${redisPort}`;
@@ -35,7 +35,7 @@ const dbConfig = {
 const redisClient = createClient({ url: redisUrl });
 
 const getData = async () => {
-  const sqlQuery = `SELECT data FROM ${sqlTable}`;
+  const sqlQuery = `SELECT * FROM ${sqlTable}`;
   const sqlConnection = await mysql.createConnection(dbConfig);
   return sqlConnection.execute(sqlQuery);
 };
@@ -75,13 +75,12 @@ app.use(express.urlencoded({ extended: false }));
 
 // express endpoints
 app.get("/", (_, res) => res.status(200).send("connected to server 1!"));
-app.get("/data", async (_, res) => {
+app.get("/todo", async (_, res) => {
   try {
     const cachedData = await getRedisCache();
     if (cachedData) {
       const results = JSON.parse(cachedData);
       res.status(200).json({ message: "success", ...results });
-      // ending the fn
       return;
     }
 

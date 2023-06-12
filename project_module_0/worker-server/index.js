@@ -1,38 +1,40 @@
 "use strict";
-require("dotenv").config();
-const { createClient } = require("redis");
-const mysql = require("mysql2");
+import dotenv from "dotenv";
+import { createClient } from "redis";
+import mysql from "mysql2/promise";
+
+dotenv.config();
 
 // redis
 const redisUsername = process.env.REDIS_USERNAME || "";
 const redisPassword = process.env.REDIS_PASSWORD || "mypassword";
-const redisHost = process.env.REDIS_HOST || "redis-pubsub";
+const redisHost = process.env.REDIS_HOST || "redis";
 const redisPort = process.env.REDIS_PORT || 6379;
 const redisChannel = process.env.REDIS_CHANNEL || "channel1";
 
 // mysql
-const sqlHost = process.env.MYSQL_HOST || "127.0.0.1";
+const sqlHost = process.env.MYSQL_HOST || "db";
 const sqlUser = process.env.MYSQL_USERNAME || "root";
 const sqlPassword = process.env.MYSQL_PASSWORD || "password";
 const sqlDatabase = process.env.MYSQL_DATABASE || "mydb";
-const sqlTable = process.env.MYSQL_TABLE || "mytable";
+const sqlTable = process.env.MYSQL_TABLE || "todos";
 
-const subscriber = createClient({
-  url: `redis://${redisUsername}:${redisPassword}@${redisHost}:${redisPort}`,
-});
-
-// get the client
-
-// create the connection to database
-const sqlConnection = mysql.createConnection({
+// configs
+const redisUrl = `redis://${redisUsername}:${redisPassword}@${redisHost}:${redisPort}`;
+const dbConfig = {
   host: sqlHost,
   user: sqlUser,
   password: sqlPassword,
   database: sqlDatabase,
-});
+};
+const subscriber = createClient({ url: redisUrl });
 
-// for debug purpose
-// console.log({ port, username, password, redisHost, redisPort, channel });
+// helper fn for DB
+const createData = async (data) => {
+  const sqlQuery = `INSERT INTO ${sqlTable} (data) VALUES ('${data}')`;
+  const sqlConnection = await mysql.createConnection(dbConfig);
+  return sqlConnection.execute(sqlQuery);
+};
 
 (async function () {
   try {
@@ -47,16 +49,7 @@ const sqlConnection = mysql.createConnection({
     // the call back fn is required
     await subscriber.subscribe(redisChannel, (message) => {
       console.log(message);
-      sqlConnection.connect(function (err) {
-        if (err) throw err;
-        console.log("Connected!");
-        const sql =
-        `INSERT INTO ${sqlTable} (data) VALUES ('${data}')`;
-        sqlConnection.query(sql, function (err, result) {
-          if (err) throw err;
-          console.log("1 record inserted");
-        });
-      });
+      createData(message);
     });
   } catch (error) {
     // exited the reconnection logic

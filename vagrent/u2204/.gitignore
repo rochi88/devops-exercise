@@ -14,7 +14,7 @@ boxes/*
 /vagrant-spec.config.rb
 test/vagrant-spec/.vagrant/
 .vagrant/
-/vagrant
+# /vagrant
 /pkg
 data.db
 vagrant-restore.db.lock
