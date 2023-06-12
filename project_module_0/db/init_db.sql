@@ -22,3 +22,5 @@ CREATE TABLE todos (
   completed BOOLEAN NOT NULL DEFAULT 0,
   PRIMARY KEY (id) 
 );
+
+INSERT INTO todos (data) VALUES ('Test project code')
