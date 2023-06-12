@@ -13,6 +13,6 @@ CREATE TABLE todos (
   PRIMARY KEY (id) 
 );
 
-INSERT INTO todos (data) VALUES ('Write project code');
-INSERT INTO todos (data) VALUES ('Test project code');
-INSERT INTO todos (data) VALUES ('Submit project code');
+INSERT INTO todos (data,completed) VALUES ('Write project code',1);
+INSERT INTO todos (data,completed) VALUES ('Test project code',1);
+INSERT INTO todos (data,completed) VALUES ('Submit project code',1);
