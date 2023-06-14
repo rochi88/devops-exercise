@@ -2,8 +2,11 @@ import { useState } from "react";
 import axios from "axios";
 
 export default function Home() {
+  // State Management
   const [value, updateValue] = useState("create new todo");
   const [input, setInput] = useState("");
+
+  // API endpoints
   const baseUrl = "http://localhost:5001";
   const getTodoUrl = `${baseUrl}/todo`;
   const createTodoUrl = `${baseUrl}/create`;

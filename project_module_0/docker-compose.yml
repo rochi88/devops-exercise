@@ -5,7 +5,7 @@ services:
     container_name: "client-app"
     build: ./client-app/.
     ports:
-      - '3000:3000'
+      - '3000:3000' # 'host:container'
     networks:
       - devnetwork
     depends_on:

@@ -40,18 +40,18 @@ const getData = async () => {
   return sqlConnection.execute(sqlQuery);
 };
 
-const setRedisCache = async (jsonData) => {
-  const value = JSON.stringify({ isCached: "yes", data: jsonData });
-  await redisClient.connect();
-  await redisClient.set("key", value);
-  return redisClient.disconnect();
-};
-
 const getRedisCache = async () => {
   await redisClient.connect();
   const cachedData = await redisClient.get("key");
   await redisClient.disconnect();
   return cachedData;
+};
+
+const setRedisCache = async (jsonData) => {
+  const value = JSON.stringify({ isCached: "yes", data: jsonData });
+  await redisClient.connect();
+  await redisClient.set("key", value);
+  return redisClient.disconnect();
 };
 
 const deleteRedisCache = async () => {
