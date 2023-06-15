@@ -46,15 +46,15 @@ The following is a proposed structure diagram of iptables, where traffic passes 
 
 Multiple rules can be added to each chain and the rules are executed in order from front to back. Let’s look at the table header definition of the rule.
 
-`PKTS`: Number of matched messages processed
-`bytes`: cumulative packet size processed (bytes)
-`Target`: If the message matches the rule, the specified target is executed.
-`PROT`: Protocols such as TDP, UDP, ICMP, and ALL.
-`opt`: Rarely used, this column is used to display IP options.
-`IN`: Inbound network interface.
-`OUT`: Outbound network interface.
-`source`: the source IP address or subnet of the traffic, the latter being anywhere.
-`destination`: the destination IP address or subnet of the traffic, or anywhere.
+- `PKTS`: Number of matched messages processed
+- `bytes`: cumulative packet size processed (bytes)
+- `Target`: If the message matches the rule, the specified target is executed.
+- `PROT`: Protocols such as TDP, UDP, ICMP, and ALL.
+- `opt`: Rarely used, this column is used to display IP options.
+- `IN`: Inbound network interface.
+- `OUT`: Outbound network interface.
+- `source`: the source IP address or subnet of the traffic, the latter being anywhere.
+- `destination`: the destination IP address or subnet of the traffic, or anywhere.
 
 There is also a column without a header, shown at the end, which represents the options of the rule, and is used as an extended match condition for the rule to complement the configuration in the previous columns. prot, opt, in, out, source and destination and the column without a header shown after destination together form the match rule. TARGET is executed when traffic matches these rules.
 
