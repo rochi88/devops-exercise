@@ -2,8 +2,7 @@
 
 ## Basic command
 
-Bring up a virtual machine
-For `virtualBox` Provider
+Bring up a virtual machine using `virtualBox` Provider
 ```sh
 vagrant up
 ```
