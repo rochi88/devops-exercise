@@ -1,5 +1,12 @@
 # Ubuntu 22.04 
 
+##
+
+install the plug-in:
+```sh
+vagrant plugin install vagrant-libvirt
+```
+
 ## Basic command
 
 Bring up a virtual machine using `virtualBox` Provider
@@ -9,6 +16,11 @@ vagrant up
 For `libvirt` provider
 ```sh
 vagrant up --provider=libvirt
+```
+
+Verify if VM is running in Libvirt KVM
+```sh
+vagrant status
 ```
 
 SSH into the machine
