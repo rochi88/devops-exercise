@@ -3,13 +3,18 @@
 ## Basic command
 
 Bring up a virtual machine
+For `virtualBox` Provider
 ```sh
-sudo vagrant up
+vagrant up
+```
+For `libvirt` provider
+```sh
+vagrant up --provider=libvirt
 ```
 
 SSH into the machine
 ```sh
-sudo  vagrant ssh
+vagrant ssh
 ```
 
 Terminate the SSH session with CTRL+D, or by logging out.
