@@ -1,12 +1,5 @@
 # Ubuntu 22.04 
 
-## Install libvirt plugin
-
-install the plug-in:
-```sh
-vagrant plugin install vagrant-libvirt
-```
-
 ## Basic command
 
 Bring up a virtual machine

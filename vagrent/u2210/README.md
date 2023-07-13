@@ -1,14 +1,10 @@
-# Ubuntu 22.04 
+# Ubuntu 22.10
 
 ## Basic command
 
-Bring up a virtual machine using `virtualBox` Provider
+Bring up a virtual machine
 ```sh
 vagrant up
-```
-For `libvirt` provider
-```sh
-vagrant up --provider=libvirt
 ```
 
 Verify if VM is running in Libvirt KVM
