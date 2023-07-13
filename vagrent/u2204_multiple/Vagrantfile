@@ -1,13 +1,13 @@
 servers=[
   {
-    :hostname => "mc1",
+    :hostname => "server1",
     :ip => "192.168.100.11",
     :box => "bento/ubuntu-22.04",
     :ram => 1024,
     :cpu => 2
   },
   {
-    :hostname => "mc2",
+    :hostname => "server2",
     :ip => "192.168.100.22",
     :box => "bento/ubuntu-22.04",
     :ram => 1024,
@@ -21,13 +21,16 @@ Vagrant.configure("2") do |config|
           node.vm.box = machine[:box]
           node.vm.hostname = machine[:hostname]
           node.vm.network "private_network", ip: machine[:ip]
+          # node.vm.provider "virtualbox" do |vb|
+          #     vb.customize ["modifyvm", :id, "--memory", machine[:ram]]
+          #     vb.customize ["modifyvm", :id, "--cpu", machine[:cpu]]
           node.vm.provider "libvirt" do |vb|
-              vb.customize ["modifyvm", :id, "--memory", machine[:ram]]
+              vb.memory = machine[:ram]
+              vb.cpus = machine[:cpu]
           # node.vm.provision "shell", inline: <<-SHELL
           #     sudo echo "192.168.100.1" | sudo tee -a /etc/hosts
           #     sudo timedatectl set-timezone Asia/Dhaka
           #  SHELL
-       
           end
       end
   end
