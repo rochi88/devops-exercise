@@ -27,9 +27,9 @@ Vagrant.configure("2") do |config|
           # node.vm.provider "virtualbox" do |vb|
           #     vb.customize ["modifyvm", :id, "--memory", machine[:ram]]
           #     vb.customize ["modifyvm", :id, "--cpu", machine[:cpu]]
-          node.vm.provider "libvirt" do |vb|
-              vb.memory = machine[:ram]
-              vb.cpus = machine[:cpu]
+          node.vm.provider "libvirt" do |lv|
+              lv.memory = machine[:ram]
+              lv.cpus = machine[:cpu]
           # node.vm.provision "shell", inline: <<-SHELL
           #     sudo echo "192.168.100.1" | sudo tee -a /etc/hosts
           #     sudo timedatectl set-timezone Asia/Dhaka
