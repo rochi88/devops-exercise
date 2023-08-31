@@ -35,7 +35,7 @@ ip a | grep vxlan
 
 
 sudo ip link set vxlan-demo up
-sudo brctl addif br-c485be328b34 vxlan-demo
+sudo brctl addif br-7c1fea7fa8fa vxlan-demo
 
 route -n
 

@@ -51,7 +51,7 @@ ip a | grep vxlan
 sudo ip link set vxlan-demo up
 
 # now attach the newly created vxlan interface to the docker bridge we created
-sudo brctl addif br-c43287381077 vxlan-demo
+sudo brctl addif br-00d0bdaea5d9 vxlan-demo
 
 # check the route to ensure everything is okay. here '172.18.0.0' part is our concern part.
 route -n

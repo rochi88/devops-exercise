@@ -104,3 +104,7 @@ sudo iptables -t nat -L -n -v
 sudo iptables --append FORWARD --in-interface veth0 --jump ACCEPT
 sudo iptables --append FORWARD --out-interface veth0 --jump ACCEPT
 sudo iptables --table nat --append POSTROUTING --source 192.168.1.0/24 --jump MASQUERADE
+
+sudo iptables --append FORWARD --in-interface veth1 --jump ACCEPT
+sudo iptables --append FORWARD --out-interface veth1 --jump ACCEPT
+sudo iptables --table nat --append POSTROUTING --source 192.168.2.0/24 --jump MASQUERADE
