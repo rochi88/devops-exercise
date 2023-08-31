@@ -1,4 +1,4 @@
-# Helpfule note
+# Helpfull note
 
 - Openvswitch Cheat Sheet [https://adhioutlined.github.io/virtual/Openvswitch-Cheat-Sheet/]
 
