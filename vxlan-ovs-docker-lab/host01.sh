@@ -41,10 +41,10 @@ sudo docker exec docker1 ip a
 sudo docker exec docker2 ip a
 
 # add ip address to the container using ovs-docker utility 
-sudo ovs-docker add-port ovs-br0 eth0 docker1 --ipaddress=192.168.1.11/24 --gateway=192.168.1.1
+sudo ovs-docker add-port ovs-br0 eth1 docker1 --ipaddress=192.168.1.11/24 --gateway=192.168.1.1
 sudo docker exec docker1 ip a
 
-sudo ovs-docker add-port ovs-br1 eth0 docker2 --ipaddress=192.168.2.11/24 --gateway=192.168.2.1
+sudo ovs-docker add-port ovs-br1 eth1 docker2 --ipaddress=192.168.2.11/24 --gateway=192.168.2.1
 sudo docker exec docker2 ip a
 
 # ping the gateway to check if container connected to ovs-bridges
@@ -58,8 +58,8 @@ netstat -ntulp
 
 # Create the vxlan tunnel using ovs vxlan feature for both bridges to another hosts bridges
 # make sure remote IP and key options; they are important
-sudo ovs-vsctl add-port ovs-br0 vxlan0 -- set interface vxlan0 type=vxlan options:remote_ip=10.0.1.169 options:key=1000
-sudo ovs-vsctl add-port ovs-br1 vxlan1 -- set interface vxlan1 type=vxlan options:remote_ip=10.0.1.169 options:key=2000
+sudo ovs-vsctl add-port ovs-br0 vxlan0 -- set interface vxlan0 type=vxlan options:remote_ip=192.168.100.44 options:key=1000
+sudo ovs-vsctl add-port ovs-br1 vxlan1 -- set interface vxlan1 type=vxlan options:remote_ip=192.168.100.44 options:key=2000
 
 # check the port again; it should be listening
 netstat -ntulp | grep 4789

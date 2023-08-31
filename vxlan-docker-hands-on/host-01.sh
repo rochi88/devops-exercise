@@ -42,7 +42,7 @@ brctl show
 # VNI ID is 100
 # dstport should be 4789 which a udp standard port for vxlan communication
 # 10.0.1.41 is the ip of another host
-sudo ip link add vxlan-demo type vxlan id 100 remote 10.0.1.41 dstport 4789 dev eth0		
+sudo ip link add vxlan-demo type vxlan id 100 remote 192.168.100.22 dstport 4789 dev eth1	
 
 # check interface list if the vxlan interface created
 ip a | grep vxlan

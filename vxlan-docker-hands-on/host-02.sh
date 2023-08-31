@@ -29,7 +29,7 @@ brctl show
 
 # 10.0.1.4 is the ip of another host
 # make sure VNI ID is the same on both hosts, this is important
-sudo ip link add vxlan-demo type vxlan id 100 remote 10.0.1.4 dstport 4789 dev eth0
+sudo ip link add vxlan-demo type vxlan id 100 remote 192.168.100.11 dstport 4789 dev eth1
 
 ip a | grep vxlan
 

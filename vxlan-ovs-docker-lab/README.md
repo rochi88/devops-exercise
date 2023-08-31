@@ -152,10 +152,10 @@ sudo docker exec docker2 ping 192.168.2.1
 ```bash
 # For VM2
 # add ip address to the container using ovs-docker utility 
-sudo ovs-docker add-port ovs-br0 eth0 docker3 --ipaddress=192.168.1.11/24 --gateway=192.168.1.1
+sudo ovs-docker add-port ovs-br0 eth0 docker3 --ipaddress=192.168.1.12/24 --gateway=192.168.1.1
 sudo docker exec docker3 ip a
 
-sudo ovs-docker add-port ovs-br1 eth0 docker4 --ipaddress=192.168.2.11/24 --gateway=192.168.2.1
+sudo ovs-docker add-port ovs-br1 eth0 docker4 --ipaddress=192.168.2.12/24 --gateway=192.168.2.1
 sudo docker exec docker4 ip a
 
 # ping the gateway to check if container connected to ovs-bridges
@@ -171,11 +171,11 @@ netstat -ntulp
 
 # Create the vxlan tunnel using ovs vxlan feature for both bridges to another hosts bridges
 # make sure remote IP and key options; they are important
-sudo ovs-vsctl add-port ovs-br0 vxlan0 -- set interface vxlan0 type=vxlan options:remote_ip=10.0.1.169 options:key=1000
+sudo ovs-vsctl add-port ovs-br0 vxlan0 -- set interface vxlan0 type=vxlan options:remote_ip=192.168.121.207 options:key=1000
 # key is VNI
 # vxlan0 is the interface/port name
 # type is vxlan which also configures udp port 4789 default
-sudo ovs-vsctl add-port ovs-br1 vxlan1 -- set interface vxlan1 type=vxlan options:remote_ip=10.0.1.169 options:key=2000
+sudo ovs-vsctl add-port ovs-br1 vxlan1 -- set interface vxlan1 type=vxlan options:remote_ip=192.168.121.207 options:key=2000
 
 # check the port again; it should be listening
 netstat -ntulp | grep 4789
@@ -191,8 +191,8 @@ netstat -ntulp
 
 # Create the vxlan tunnel using ovs vxlan feature for both bridges to another hosts bridges
 # make sure remote IP and key options; they are important
-sudo ovs-vsctl add-port ovs-br0 vxlan0 -- set interface vxlan0 type=vxlan options:remote_ip=10.0.1.43 options:key=1000
-sudo ovs-vsctl add-port ovs-br1 vxlan1 -- set interface vxlan1 type=vxlan options:remote_ip=10.0.1.43 options:key=2000
+sudo ovs-vsctl add-port ovs-br0 vxlan0 -- set interface vxlan0 type=vxlan options:remote_ip=192.168.121.250 options:key=1000
+sudo ovs-vsctl add-port ovs-br1 vxlan1 -- set interface vxlan1 type=vxlan options:remote_ip=192.168.121.250 options:key=2000
 
 # check the port again; it should be listening
 netstat -ntulp | grep 4789
