@@ -7,19 +7,18 @@ sudo docker network ls
 
 ip a
 
-# sudo docker run -d --net --name docker0 vxlan-net --ip 172.18.0.12 ubuntu sleep 3000
-sudo docker run -d --net --name docker0 vxlan-net --ip 172.18.0.12 ubuntu
+sudo docker run -d --net vxlan-net --ip 172.18.0.12 ubuntu sleep 3000
 
 sudo docker ps
 
 # sudo docker inspect 77 | grep IPAddress
-sudo docker inspect docker0 | grep IPAddress
+sudo docker inspect 33 | grep IPAddress
 
 ping 172.18.0.1 -c 2
 
 # sudo docker exec -it 77 bash
-sudo docker exec -it docker0 apt update
-sudo docker exec -it docker0 apt install net-tools iputils-ping -y
+sudo docker exec -it 33 apt update
+sudo docker exec -it 33 apt install net-tools iputils-ping -y
 
 # inside container
 # apt-get update
@@ -39,7 +38,7 @@ ip a | grep vxlan
 
 
 sudo ip link set vxlan-demo up
-sudo brctl addif br-7c1fea7fa8fa vxlan-demo
+sudo brctl addif br-4354dbfdb8ea vxlan-demo
 
 route -n
 
@@ -47,4 +46,4 @@ route -n
 
 # ping 172.18.0.11 -c 2
 
-sudo docker exec -it docker9 ping 172.18.0.11
+sudo docker exec -it 33 ping 172.18.0.11

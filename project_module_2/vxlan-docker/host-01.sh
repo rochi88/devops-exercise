@@ -12,14 +12,13 @@ sudo docker network ls
 ip a
 
 # running ubuntu container with "sleep 3000" and a static ip
-# sudo docker run -d --net --name docker0 vxlan-net --ip 172.18.0.11 ubuntu sleep 3000
-sudo docker run -d --net --name docker0 vxlan-net --ip 172.18.0.11 ubuntu
+sudo docker run -d --net vxlan-net --ip 172.18.0.11 ubuntu sleep 3000
 
 # check the container running or not
 sudo docker ps
 
 # check the IPAddress to make sure that the ip assigned properly
-sudo docker inspect docker0 | grep IPAddress
+sudo docker inspect 10 | grep IPAddress
 
 # ping the docker bridge ip to see whether the traffic can pass
 ping 172.18.0.1 -c 2
@@ -27,8 +26,8 @@ ping 172.18.0.1 -c 2
 # enter the running container using exec 
 # sudo docker exec -it a9 bash
 
-sudo docker exec -it docker0 apt update
-sudo docker exec -it docker0 apt install net-tools iputils-ping -y
+sudo docker exec -it 10 apt update
+sudo docker exec -it 10 apt install net-tools iputils-ping -y
 # Now we are inside running container
 # update the package and install net-tools and ping tools
 # apt-get update
@@ -55,14 +54,14 @@ ip a | grep vxlan
 sudo ip link set vxlan-demo up
 
 # now attach the newly created vxlan interface to the docker bridge we created
-sudo brctl addif br-00d0bdaea5d9 vxlan-demo
+sudo brctl addif br-62060782f406 vxlan-demo
 
 # check the route to ensure everything is okay. here '172.18.0.0' part is our concern part.
 route -n
 
-sudo docker exec -it a9 bash
+sudo docker exec -it 10 bash
 
 # ping the other container IP
 ping 172.18.0.12 -c 2
 
-sudo docker exec -it docker0 ping 172.18.0.12
+sudo docker exec -it 10 ping 172.18.0.12

@@ -5,5 +5,5 @@ RUN apt install -y net-tools
 RUN apt install -y iproute2
 RUN apt install -y iputils-ping
 
-# CMD ["sleep", "7200"]
+CMD ["sleep", "7200"]
 
