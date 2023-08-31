@@ -12,24 +12,28 @@ sudo docker network ls
 ip a
 
 # running ubuntu container with "sleep 3000" and a static ip
-sudo docker run -d --net vxlan-net --ip 172.18.0.11 ubuntu sleep 3000
+# sudo docker run -d --net --name docker0 vxlan-net --ip 172.18.0.11 ubuntu sleep 3000
+sudo docker run -d --net --name docker0 vxlan-net --ip 172.18.0.11 ubuntu
 
 # check the container running or not
 sudo docker ps
 
 # check the IPAddress to make sure that the ip assigned properly
-sudo docker inspect a9 | grep IPAddress
+sudo docker inspect docker0 | grep IPAddress
 
 # ping the docker bridge ip to see whether the traffic can pass
 ping 172.18.0.1 -c 2
 
 # enter the running container using exec 
-sudo docker exec -it a9 bash
+# sudo docker exec -it a9 bash
+
+sudo docker exec -it docker0 apt update
+sudo docker exec -it docker0 apt install net-tools iputils-ping -y
 # Now we are inside running container
 # update the package and install net-tools and ping tools
-apt-get update
-apt-get install net-tools
-apt-get install iputils-ping
+# apt-get update
+# apt-get install net-tools
+# apt-get install iputils-ping
 
 # Now ping the another container
 ping 172.18.0.12 -c 2
@@ -60,3 +64,5 @@ sudo docker exec -it a9 bash
 
 # ping the other container IP
 ping 172.18.0.12 -c 2
+
+sudo docker exec -it docker0 ping 172.18.0.12
