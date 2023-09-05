@@ -6,7 +6,7 @@
 - Vagrant
 
 ## Installation
-1. Install Vagrant, Libvirt and QEMU for your distribution
+1. Install Vagrant,for your distribution
 `Ubuntu`
 
 ```sh
