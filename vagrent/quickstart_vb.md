@@ -19,6 +19,11 @@ In prepared project directory, run following command:
 vagrant up
 ```
 
+## ssh VM
+```sh
+vagrant ssh
+```
+
 ## List VM
 ```sh
 virsh list
