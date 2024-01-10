@@ -19,7 +19,7 @@ FLUSH PRIVILEGES;
 FLUSH TABLES WITH READ LOCK;
 ```
 
-Enable native password for new user
+Enable native password for new user (MySQL >= 8.0)
 ```bash
 ALTER USER 'repl'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
 ```
