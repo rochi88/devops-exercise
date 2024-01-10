@@ -1,11 +1,33 @@
 # Setting Up MySQL Replication: Master-Slave Configuration
 
+## Inatallation
+
+```bash
+docker compose up
+```
+
+## Configure
+
 ### Configuring the master
 
 #### Creating users and granting privileges
 
 ```bash
 CREATE USER 'repl'@'%' IDENTIFIED BY 'password';
+GRANT REPLICATION SLAVE ON *.* TO 'repl'@'%';
+FLUSH PRIVILEGES;
+FLUSH TABLES WITH READ LOCK;
+```
+
+Enable native password for new user
+```bash
+ALTER USER 'repl'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+```
+
+or just
+
+```bash
+CREATE USER 'repl'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
 GRANT REPLICATION SLAVE ON *.* TO 'repl'@'%';
 FLUSH PRIVILEGES;
 FLUSH TABLES WITH READ LOCK;
@@ -37,13 +59,18 @@ CHANGE MASTER TO MASTER_HOST='[master_ip]', MASTER_USER='repl', MASTER_PASSWORD=
 In this example, the host name of master is `master` (name of the docker container) which will be automatically resolved to master's IP, the log file is `binlog.000002` and the log position is `1151`.
 
 ```bash
-CHANGE MASTER TO MASTER_HOST='master', MASTER_USER='repl', MASTER_PASSWORD='password', MASTER_LOG_FILE='binlog.000002', MASTER_LOG_POS=1151;
+CHANGE MASTER TO MASTER_HOST='172.17.0.2', MASTER_USER='repl', MASTER_PASSWORD='password', MASTER_LOG_FILE='binlog.000002', MASTER_LOG_POS=857;
 START SLAVE;
 ```
 
 Note: we used master as the hostname because we are using docker-compose and the containers are on the same network.
 
 #### Testing the replication
+
+As we locked all the tables using `FLUSH TABLES WITH READ LOCK;` so need to Unloak tables
+```bash
+UNLOCK TABLES;
+```
 
 Create a new table on the master:
 
@@ -70,7 +97,7 @@ If you do not see the data, check the slave status:
 SHOW SLAVE STATUS;
 ```
 
-### Reference
+## Reference
 
 - [Source Repo](https://github.com/umarfchy/mysql-replication)
 
