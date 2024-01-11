@@ -1,0 +1,71 @@
+master=[
+  {
+    :hostname => "master",
+    :ip => "192.168.100.11",
+    :box => "bento/ubuntu-22.04",
+    :ram => 1024,
+    :cpu => 2
+  }
+]
+
+agents=[
+  {
+    :hostname => "agent1",
+    :ip => "192.168.100.22",
+    :box => "bento/ubuntu-22.04",
+    :ram => 1024,
+    :cpu => 2
+  },
+  {
+    :hostname => "agent2",
+    :ip => "192.168.100.33",
+    :box => "bento/ubuntu-22.04",
+    :ram => 1024,
+    :cpu => 2
+  },
+  {
+    :hostname => "agent3",
+    :ip => "192.168.100.44",
+    :box => "bento/ubuntu-22.04",
+    :ram => 1024,
+    :cpu => 2
+  }
+]
+
+Vagrant.configure("2") do |config|
+  config.vm.define "master", primary: true do |node|
+    node.vm.box = machine[:box]
+    node.vm.hostname = machine[:hostname]
+    node.vm.network "private_network", ip: machine[:ip]
+    node.vm.provider "libvirt" do |lv|
+        lv.memory = machine[:ram]
+        lv.cpus = machine[:cpu]
+
+      # turn off inputs
+      vb.inputs = []
+    end
+
+    args = []
+    node.vm.provision "k3s shell script", type: "shell",
+        path: "scripts/k3s_server_provisioning.sh",
+        args: args
+  end
+
+  agents.each do |machine|
+      config.vm.define machine[:hostname] do |node|
+          node.vm.box = machine[:box]
+          node.vm.hostname = machine[:hostname]
+          node.vm.network "private_network", ip: machine[:ip]
+          node.vm.provider "libvirt" do |lv|
+              lv.memory = machine[:ram]
+              lv.cpus = machine[:cpu]
+          node.vm.provision "shell", inline: <<-SHELL
+              sudo timedatectl set-timezone Asia/Dhaka
+              sudo apt update
+              sudo apt install -y curl net-tools iputils-ping docker.io
+              ufw disable
+           SHELL
+          end
+      end
+  end
+end
