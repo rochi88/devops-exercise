@@ -8,5 +8,9 @@ Starting the VM
 ./deploy.sh
 ```
 
-## Note
-- [Got help from](https://gist.github.com/smijar/af6910ab8fdc18d85c3518bd63587b4e)
+## Check k3s Nodes
+
+```bash
+ssh vagrant@192.1638.100.11
+sudo k3s kubectl get node 
+```
