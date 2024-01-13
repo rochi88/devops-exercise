@@ -1,4 +1,4 @@
-# Name: scripts/k3s_server_provisioning.sh
+#!/bin/bash
 set -euox pipefail
 sudo -i
 
@@ -12,14 +12,14 @@ apt-get -y update
 
 ufw allow 6443/tcp
 
-echo "**** Begin installing k3s"
+echo "**** Begin installing k3s server"
 
 SERVER_IP="192.168.100.11"
 # INSTALL_K3S_EXEC="--bind-address ${SERVER_IP} --node-external-ip ${SERVER_IP} --tls-san $SERVER_IP --tls-san server --disable-agent" # --flannel-iface=eth1
 # curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" sh -s - --bind-address ${SERVER_IP} --node-external-ip ${SERVER_IP} --tls-san $SERVER_IP --tls-san server
 curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" sh -s - --tls-san $SERVER_IP --tls-san server
 
-echo "**** End installing k3s"
+echo "**** End installing k3s server"
 
 # systemctl enable --now k3s
 # systemctl start k3s
