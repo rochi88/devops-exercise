@@ -1,24 +1,8 @@
 #!/usr/bin/env bash
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
+# Written by: Md Raisul Islam
+# Date: 14-Jan-2024
 
-set -euo pipefail
-
-info() {
-  printf "\r\033[00;35m$1\033[0m\n"
-}
-
-success() {
-  printf "\r\033[00;32m$1\033[0m\n"
-}
-
-fail() {
-  printf "\r\033[0;31m$1\033[0m\n"
-}
-
-divider() {
-  printf "\r\033[0;1m========================================================================\033[0m\n"
-}
+set -euxo pipefail
 
 pause_for_confirmation() {
   read -rsp $'Press any key to continue (ctrl-c to quit):\n' -n1 key
@@ -38,8 +22,6 @@ interrupt_handler() {
   fi
 }
 trap interrupt_handler SIGINT SIGTERM
-
-# This setup script does all the magic.
 
 # Check for required tools
 declare -a req_tools=("terraform" "sed" "curl" "jq")
@@ -75,39 +57,6 @@ BACKEND_TF=$(dirname ${BASH_SOURCE[0]})/../backend.tf
 PROVIDER_TF=$(dirname ${BASH_SOURCE[0]})/../provider.tf
 TERRAFORM_VERSION=$(terraform version -json | jq -r '.terraform_version')
 
-# Check that we've already authenticated via Terraform in the static credentials
-# file.  Note that if you configure your token via a credentials helper or any
-# other method besides the static file, this script will not take that in to
-# account - but we do this to avoid embedding a Go binary in this simple script
-# and you hopefully do not need this Getting Started project if you're using one
-# already!
-CREDENTIALS_FILE="$HOME/.terraform.d/credentials.tfrc.json"
-
-# Credentials are located in App/Data/Roaming on Windows
-if [[ "$OSTYPE" =~ ^msys || "$OSTYPE" =~ ^cygwin || "$OSTYPE" =~ ^win32  ]]; then
-    CREDENTIALS_FILE="$APPDATA/terraform.d/credentials.tfrc.json"
-fi
-
-TOKEN=$(jq -j --arg h "$HOST" '.credentials[$h].token' "$CREDENTIALS_FILE")
-if [[ ! -f $CREDENTIALS_FILE || $TOKEN == null ]]; then
-  fail "We couldn't find a token in the Terraform credentials file at $CREDENTIALS_FILE."
-  fail "Please run 'terraform login', then run this setup script again."
-  exit 1
-fi
-
-# Check that this is your first time running this script. If not, we'll reset
-# all local state and restart from scratch!
-if ! git diff-index --quiet --no-ext-diff HEAD --; then
-  echo "It looks like you may have run this script before! Re-running it will reset any
-  changes you've made to backend.tf and provider.tf."
-  echo
-  pause_for_confirmation
-
-  git checkout HEAD backend.tf provider.tf
-  rm -rf .terraform
-  rm -f *.lock.hcl
-fi
-
 echo
 printf "\r\033[00;35;1m
 --------------------------------------------------------------------------
@@ -126,83 +75,6 @@ info "First, we'll do some setup and configure Terraform to use Terraform Cloud.
 echo
 pause_for_confirmation
 
-# Create a Terraform Cloud organization
-echo
-echo "Creating an organization and workspace..."
-sleep 1
-setup() {
-  curl https://$HOST/api/getting-started/setup \
-    --request POST \
-    --silent \
-    --header "Content-Type: application/vnd.api+json" \
-    --header "Authorization: Bearer $TOKEN" \
-    --header "User-Agent: tfc-getting-started" \
-    --data @- << REQUEST_BODY
-{
-	"workflow": "remote-operations",
-  "terraform-version": "$TERRAFORM_VERSION"
-}
-REQUEST_BODY
-}
-
-response=$(setup)
-err=$(echo $response | jq -r '.errors')
-
-if [[ $err != null ]]; then
-  err_msg=$(echo $err | jq -r '.[0].detail')
-  if [[ $err_msg != null ]]; then
-    fail "An error occurred: ${err_msg}"
-  else 
-    fail "An unknown error occurred: ${err}"
-  fi
-  exit 1
-fi
-
-# TODO: If there's an active trial, we should just retrieve that and configure
-# it instead (especially if it has no state yet)
-info=$(echo $response | jq -r '.info')
-if [[ $info != null ]]; then
-  info "\n${info}"
-  exit 0
-fi
-
-organization_name=$(echo $response | jq -r '.data."organization-name"')
-workspace_name=$(echo $response | jq -r '.data."workspace-name"')
-
-echo
-echo "Writing Terraform Cloud configuration to backend.tf..."
-sleep 2
-
-# We don't sed -i because MacOS's sed has problems with it.
-TEMP=$(mktemp)
-cat $BACKEND_TF |
-  # Add the backend config for the hostname if necessary
-  # Note: sed 9a means append the string that follows \\ at line 9 in backend.tf
-  if [[ "$HOST" != "app.terraform.io" ]]; then sed "9a\\
-\    hostname = \"$HOST\"
-    "; else cat; fi |
-  # replace the organization and workspace names
-  sed "s/{{ORGANIZATION_NAME}}/${organization_name}/" |
-  sed "s/{{WORKSPACE_NAME}}/${workspace_name}/" \
-    > $TEMP
-mv $TEMP $BACKEND_TF
-
-# add extra provider config for the hostname if necessary
-if [[ "$HOST" != "app.terraform.io" ]]; then
-  TEMP=$(mktemp)
-  cat $PROVIDER_TF |
-  # Note: sed 15a\\ means append the strings that follows the \\ at line 15 in provider.tf
-    sed "15a\\
-  \  hostname = var.provider_hostname
-      " \
-      > $TEMP
-  echo "
-variable \"provider_hostname\" {
-  type = string
-}" >> $TEMP
-  mv $TEMP $PROVIDER_TF
-fi
-
 echo
 divider
 echo
@@ -219,6 +91,7 @@ echo
 pause_for_confirmation
 
 echo
+terraform fmt -recursive
 terraform init
 echo
 echo "..."
@@ -289,3 +162,6 @@ Terraform Cloud, visit:
 https://$HOST/fake-web-services"
 echo
 exit 0
+
+
+
