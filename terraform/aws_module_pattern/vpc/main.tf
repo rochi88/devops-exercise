@@ -1,12 +1,12 @@
 locals {
-  
+
 }
 
 resource "aws_vpc" "new_vpc" {
   cidr_block           = var.cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
-  
+
   tags = {
     Name = var.name
   }
@@ -25,7 +25,7 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_internet_gateway" "new_igw" {
-  vpc_id = resource.aws_vpc.my_vpc.id
+  vpc_id = resource.aws_vpc.new_vpc.id
 
   tags = {
     Name = var.igw
