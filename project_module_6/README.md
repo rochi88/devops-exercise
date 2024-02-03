@@ -14,3 +14,7 @@ Starting the VM
 ssh vagrant@192.1638.100.11
 sudo k3s kubectl get node 
 ```
+or 
+```bash
+kubectl get node
+```

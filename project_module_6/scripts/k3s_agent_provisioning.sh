@@ -16,15 +16,15 @@ K3S_URL="https://$SERVER_IP:6443"
 curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" K3S_URL=https://192.168.100.11:6443 K3S_TOKEN_FILE=/vagrant/server_details/node-token SERVER_IP=\"192.168.100.11\" sh -s -
 
 # copying custom service file because agent install doesn't add the 
-#cp /vagrant/server_details/k3s-agent.service /etc/systemd/system/k3s-agent.service
+cp /vagrant/server_details/k3s-agent.service /etc/systemd/system/k3s-agent.service
 echo "**** End installing k3s agent"
 
-# truncate -s -1 /etc/systemd/system/k3s-agent.service
-# cat <<-EOT | tee -a /etc/systemd/system/k3s-agent.service
-#     --token-file /vagrant/server_details/node-token \
-#     --server https://192.168.100.11:6443
-# EOT
+truncate -s -1 /etc/systemd/system/k3s-agent.service
+cat <<-EOT | tee -a /etc/systemd/system/k3s-agent.service
+    --token-file /vagrant/server_details/node-token \
+    --server https://192.168.100.11:6443
+EOT
 
-# systemctl enable --now k3s-agent
-# systemctl daemon-reload k3s-agent
-# systemctl restart k3s-agent.service
+systemctl enable --now k3s-agent
+systemctl daemon-reload k3s-agent
+systemctl restart k3s-agent.service
