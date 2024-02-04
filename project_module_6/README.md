@@ -18,3 +18,18 @@ or
 ```bash
 kubectl get node
 ```
+
+## Check pods
+```bash
+kubectl get pods
+```
+
+## Check services
+```bash
+kubectl get svc
+```
+
+## Check End points
+```bash
+kubectl get ep
+```
