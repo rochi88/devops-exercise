@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 # first, bring up the server
-vagrant up server --debug &> vagrant_server.log
+vagrant up server1 server2 --debug &> vagrant_servers.log
 
 sleep 10
 
@@ -12,7 +12,7 @@ sleep 10
 sleep 5
 
 # bring up the agent
-vagrant up agent1 agent2 agent3 --debug &> vagrant_agents.log
+vagrant up worker1 worker2 worker3 --debug &> vagrant_agents.log
 
 echo "All deployed!! to leverage the new cluster you can do one of the following:"
 echo "you do $ export KUBECONFIG=./shared/server_details/kubeconfig"

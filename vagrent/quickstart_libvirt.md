@@ -41,6 +41,12 @@ Vagrant needs to know that we want to use Libvirt and not default VirtualBox. Th
 export VAGRANT_DEFAULT_PROVIDER=libvirt
 ```
 
+### Saving log
+saving the output to a file
+```sh
+vagrant up --debug &> vagrant.log
+```
+
 ## List VM
 ```sh
 virsh list
