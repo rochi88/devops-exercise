@@ -1,13 +1,13 @@
-use std::path::Path;
-
 use libmdbx::{Database, NoWriteMap, WriteFlags};
 
-fn main() {
-    let db = Database::<NoWriteMap>::open(Path::new("_db")).unwrap();
+const DB_NAME: &str = "_db";
 
-    // write
+fn main() {
+    let db = Database::<NoWriteMap>::open(Path::new(DB_NAME)).unwrap();
+
+    // Write
     {
-        let txn = db.begin_rw_txn().unwrap();
+        let mut txn = db.begin_rw_txn().unwrap();
         let table = txn.open_table(None).unwrap();
         for i in 0..100 {
             txn.put(
@@ -17,23 +17,21 @@ fn main() {
                 WriteFlags::empty(),
             )
             .unwrap();
-            // delete
             if i > 50 {
                 txn.del(&table, &format!("key{}", i), None).unwrap();
             }
         }
         txn.commit().unwrap();
     }
-    // read
+
+    // Read
     {
-        let txn = db.begin_ro_txn().unwrap();
+        let mut txn = db.begin_ro_txn().unwrap();
         let table = txn.open_table(None).unwrap();
         for i in 0..100 {
-            println!(
-                "{:?}",
-                txn.get::<Vec<u8>>(&table, format!("key{}", i).as_bytes())
-                    .unwrap()
-            );
+            let value = txn.get::<Vec<u8>>(&table, format!("key{}", i).as_bytes()).unwrap();
+            println!("{:?}\n", value);
         }
+        txn.commit().unwrap();
     }
 }
