@@ -59,9 +59,7 @@ sudo systemctl restart containerd && systemctl status containerd
 sudo apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
-kubectl apply -f https://reweave.azurewebsites.net/k8s/v1.30/net.yaml
+$(cat /vagrant/server_details/join)
 
 echo "**** End installing k8s worker"
-
-$(cat /vagrant/server_details/join)
 
