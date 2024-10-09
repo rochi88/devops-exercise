@@ -2,31 +2,31 @@ server=[
   {
     :hostname => "server",
     :ip => "192.168.100.11",
-    :box => "bento/ubuntu-24.04",
-    :ram => 2048,
-    :cpu => 2
+    :box => "bento/ubuntu-22.04",
+    :ram => 4096,
+    :cpu => 4
   }
 ]
 
-agents=[
+workers=[
   {
-    :hostname => "agent1",
-    :ip => "192.168.100.22",
-    :box => "bento/ubuntu-24.04",
-    :ram => 8192,
+    :hostname => "worker1",
+    :ip => "192.168.100.21",
+    :box => "bento/ubuntu-22.04",
+    :ram => 4096,
     :cpu => 4
   },
   {
-    :hostname => "agent2",
-    :ip => "192.168.100.33",
-    :box => "bento/ubuntu-24.04",
-    :ram => 2048,
-    :cpu => 2
+    :hostname => "worker2",
+    :ip => "192.168.100.22",
+    :box => "bento/ubuntu-22.04",
+    :ram => 4096,
+    :cpu => 4
   },
   {
-    :hostname => "agent3",
-    :ip => "192.168.100.44",
-    :box => "bento/ubuntu-24.04",
+    :hostname => "worker3",
+    :ip => "192.168.100.23",
+    :box => "bento/ubuntu-22.04",
     :ram => 2048,
     :cpu => 2
   }
@@ -37,13 +37,17 @@ Vagrant.configure("2") do |config|
     config.vm.define machine[:hostname], primary: true do |node|
       node.vm.box = machine[:box]
       node.vm.hostname = machine[:hostname]
+
+      # Setting up private_network to have virtual host
       node.vm.network "private_network", ip: machine[:ip]
+
+      # Setting up synced folder
       node.vm.synced_folder "./shared", "/vagrant", type: "rsync",
           rsync__exclude: ".git/"
 
       node.vm.provider "libvirt" do |lv|
           lv.nested = true
-          lv.cpu_mode = "host-passthrough"
+          # lv.cpu_mode = "host-passthrough"
           lv.memory = machine[:ram]
           lv.cpus = machine[:cpu]
 
@@ -58,24 +62,28 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  agents.each do |machine|
+  workers.each do |machine|
       config.vm.define machine[:hostname] do |node|
           node.vm.box = machine[:box]
           node.vm.hostname = machine[:hostname]
+
+          # Setting up private_network to have virtual host
           node.vm.network "private_network", ip: machine[:ip]
+
+          # Setting up synced folder
           node.vm.synced_folder "./shared", "/vagrant", type: "rsync",
               rsync__exclude: ".git/"
 
           node.vm.provider "libvirt" do |lv|
               lv.nested = true
-              lv.cpu_mode = "host-passthrough"
+              # lv.cpu_mode = "host-passthrough"
               lv.memory = machine[:ram]
               lv.cpus = machine[:cpu]
           end
           
           args = []
-          node.vm.provision "k3s agent shell script", type: "shell",
-          path: "scripts/k3s_agent_provisioning.sh",
+          node.vm.provision "k3s worker shell script", type: "shell",
+          path: "scripts/k3s_worker_provisioning.sh",
           args: args
       end
   end

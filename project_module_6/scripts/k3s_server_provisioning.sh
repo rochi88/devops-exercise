@@ -5,10 +5,16 @@ sudo -i
 # echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolv.conf
 #hostname -I | cut -d' ' -f2 2>/dev/null > /vagrant/SERVER1_IP
 
+timedatectl set-timezone Asia/Dhaka
+
 chmod +x /dev/kvm
 sed -i 's/DNSSEC=yes/DNSSEC=no/1'  /etc/systemd/resolved.conf
 systemctl restart systemd-resolved.service
-apt-get -y update
+apt update -y
+
+## Disable swap
+swapoff -a
+sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
 ufw allow 6443/tcp
 
@@ -21,5 +27,5 @@ curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" sh -s - --tls-san $SERV
 
 echo "**** End installing k3s server"
 
-# systemctl enable --now k3s
-# systemctl start k3s
+systemctl enable --now k3s
+systemctl status k3s

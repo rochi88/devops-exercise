@@ -46,7 +46,7 @@ kubectl apply -f my-pod.yaml
 ### Verify the pod
 To verify that the pod has been created and is running
 ```sh
-kubectl get pod
+kubectl get pods
 ```
 
 ### Execute a Command Inside the Pod

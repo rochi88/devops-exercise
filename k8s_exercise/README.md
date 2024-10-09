@@ -1,4 +1,4 @@
-# Project Module 6
+# Kubernetes Exercise
 
 ## Commands
 
@@ -12,7 +12,7 @@ Starting the VM
 
 ```bash
 ssh vagrant@192.1638.100.11
-sudo k3s kubectl get node 
+sudo k8s kubectl get node 
 ```
 or 
 ```bash

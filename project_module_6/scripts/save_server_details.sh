@@ -1,10 +1,10 @@
 #!/bin/bash
 set -euox pipefail
 
-# get node-token for agent
+# get node-token for worker
 vagrant ssh server -c "sudo cat /etc/rancher/k3s/k3s.yaml" 2>/dev/null > ./shared/server_details/kubeconfig
 
-# get node-token for agent
+# get node-token for worker
 vagrant ssh server -c "sudo cat /var/lib/rancher/k3s/server/node-token" 2>/dev/null > ./shared/server_details/node-token
 
 # get IP

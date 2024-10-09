@@ -12,11 +12,13 @@ Starting the VM
 
 ```bash
 ssh vagrant@192.1638.100.11
-sudo k3s kubectl get node 
+kubectl get nodes
+systemctl status k3s
 ```
 or 
 ```bash
-kubectl get node
+kubectl get nodes
+kubectl cluster-info
 ```
 
 ## Check pods
@@ -32,4 +34,9 @@ kubectl get svc
 ## Check End points
 ```bash
 kubectl get ep
+```
+
+## Default Kubernetes Object
+```sh
+sudo kubectl get all -n kube-system
 ```
