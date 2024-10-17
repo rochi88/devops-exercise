@@ -54,12 +54,19 @@ tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.5.1.tgz
 
 cp -f /vagrant/containerd/config.toml /etc/containerd/config.toml
 
-sudo systemctl restart containerd && systemctl status containerd
+systemctl restart containerd && systemctl status containerd
 
-sudo apt install -y kubelet kubeadm kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
+apt install -y kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
 
-$(cat /vagrant/server_details/join)
+sudo cat /vagrant/server_details/join | bash
+
+## Optional
+kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+chmod a+r /etc/bash_completion.d/kubectl
+echo 'alias k=kubectl' >>~/.bashrc
+echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
+source ~/.bashrc
 
 echo "**** End installing k8s worker"
 

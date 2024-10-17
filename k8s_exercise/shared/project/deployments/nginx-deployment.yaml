@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: nginx-deployment
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: nginx
@@ -17,3 +17,10 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"  # Request 64 megabytes of memory
+            cpu: "50m"      # Request 50 millicores (0.05 cores) of CPU
+          limits:
+            memory: "128Mi" # Limit memory to 128 megabytes
+            cpu: "100m"     # Limit CPU to 100 millicores (0.1 cores)
