@@ -35,16 +35,16 @@ spec:
       nodeSelector:
         processing: high
 ```
-In this Deployment, three replicas of the Pod will be created. The nodeSelector field ensures that these Pods are scheduled on nodes labeled with processing: high.
+In this Deployment, three replicas of the Pod will be created. The `nodeSelector` field ensures that these Pods are scheduled on nodes labeled with `processing: high`.
 
-### Identifying the nodeto add labels:
+### Identifying the `node`to add labels:
 Before we can use nodeSelector, we need to label the nodes where we want our Pod to be scheduled. We can get the names of the nodes in our cluster by running the command ..
 ```sh
 kubectl get nodes
 ```
-this will provide the names of nodes in the cluster.
+this will provide the names of `nodes` in the `cluster`.
 
-Assuming node1= desired <Node-name>
+Assuming `node1`= desired `<Node-name>`
 
 ### Label the Node
 ```sh
@@ -67,4 +67,4 @@ All the pods will be in one node which was labeled.
 ![output-1](images/image-2.png)
 
 ### Shortcomings of NodeSelector
-In our scenario, we use nodeSelector to schedule Pods on nodes labeled processing: high. But, if we have multiple such nodes, nodeSelector doesn't prioritize. It might schedule Pods on a nearly full node instead of a less utilized one. For better control, we can use Node Affinity to set more specific scheduling rules.
+In our scenario, we use nodeSelector to schedule Pods on nodes labeled `processing: high`. But, if we have multiple such nodes, nodeSelector doesn't prioritize. It might schedule Pods on a nearly full node instead of a less utilized one. For better control, we can use Node Affinity to set more specific scheduling rules.
