@@ -53,9 +53,9 @@ sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config
 systemctl status containerd
 systemctl enable containerd
 
-wget https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz
+wget https://github.com/containernetworking/plugins/releases/download/v1.6.0/cni-plugins-linux-amd64-v1.6.0.tgz
 mkdir -p /opt/cni/bin
-tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.5.1.tgz
+tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.6.0.tgz
 
 cp -f /vagrant/containerd/config.toml /etc/containerd/config.toml
 
